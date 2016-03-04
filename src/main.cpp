@@ -124,7 +124,7 @@ void configureSensor(um7::Comms* sensor)
     ROS_INFO("gyro x trim value is %f", r.gyro_trim.get(0));
     ROS_INFO("gyro y trim value is %f", r.gyro_trim.get(1));
     ROS_INFO("gyro z trim value is %f", r.gyro_trim.get(2));
-    
+
     uint32_t comm_reg = (BAUD_115200 << COM_BAUD_START);
     r.communication.set(0, comm_reg);
     if (!sensor->sendWaitAck(r.comrate2))
@@ -336,13 +336,13 @@ int main(int argc, char **argv)
   //   "covariance unknown" as advised in sensor_msgs/Imu.h.
   // This param allows the user to specify alternate covariance values if needed.
   ros::param::param<float>("~orientation_covariance", orientation_covar, 0.01);
-  ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.000025);
-  ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.0036);
+  ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.01);
+  ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.01);
 
   // set gyro trim rates
-  ros::param::param<float>("~gyro_x_trim", gyro_x_trim, 0.06);
-  ros::param::param<float>("~gyro_y_trim", gyro_y_trim, -0.1);
-  ros::param::param<float>("~gyro_z_trim", gyro_z_trim, -1.8);
+  ros::param::param<float>("~gyro_x_trim", gyro_x_trim, 0.05329273);
+  ros::param::param<float>("~gyro_y_trim", gyro_y_trim, -0.07463416);
+  ros::param::param<float>("~gyro_z_trim", gyro_z_trim, -1.563177);
 
   // Real Time Loop
   bool first_failure = true;
