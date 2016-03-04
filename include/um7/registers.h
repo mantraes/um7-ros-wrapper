@@ -171,8 +171,8 @@ class Registers {
       mag_bias(this, CREG_MAG_BIAS_X, 3),
       cmd_zero_gyros(this, CHR_ZERO_GYROS),
       cmd_reset_ekf(this, CHR_RESET_EKF),
-      cmd_set_mag_ref(this, CHR_SET_MAG_REFERENCE)
-      gyro_trim(this, CREG_GYRO_TRIM_X, 3);
+      cmd_set_mag_ref(this, CHR_SET_MAG_REFERENCE),
+      gyro_trim(this, CREG_GYRO_TRIM_X, 3)
     {
       memset(raw_, 0, sizeof(raw_));
     }
