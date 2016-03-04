@@ -13,6 +13,9 @@
     <param name="angular_velocity_covariance"         value="0.000025" />
     <param name="linear_acceleration_covariance"      value="0.0036" />
 
+    <param name="gyro_x_trim"      value="0.06"/>
+    <param name="gyro_x_trim"      value="-0.1"/>
+    <param name="gyro_x_trim"      value="-1.8"/>
   </node>
 
 </launch>
