@@ -290,6 +290,7 @@ void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& 
     pose_msg.pose.orientation.w = r.quat.get_scaled(0);
     pose_pub.publish(pose_msg);
   }
+
 }
 
 
@@ -327,6 +328,10 @@ int main(int argc, char **argv)
   ros::param::param<double>("~orientation_covariance", ori_covariance, 0.01);
   ros::param::param<double>("~angular_velocity_covariance", ang_covariance, 0.000025);
   ros::param::param<double>("~linear_acceleration_covariance", lin_covariance, 0.0036);
+
+  if (!ori_covariance) ori_covariance = 0.01;
+  if (!ang_covariance) ang_covariance = 0.000025;
+  if (!lin_covariance) lin_covariance = 0.0036;
 
   // Real Time Loop
   bool first_failure = true;
