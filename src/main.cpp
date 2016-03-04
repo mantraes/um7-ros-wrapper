@@ -8,7 +8,7 @@
  *  \copyright  Copyright (c) 2013, Clearpath Robotics, Inc.
  *  \author     Alex Brown <rbirac@cox.net>		    (adapted to UM7)
  *  \copyright  Copyright (c) 2015, Alex Brown.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -19,18 +19,18 @@
  *     * Neither the name of Clearpath Robotics, Inc. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL CLEARPATH ROBOTICS, INC. OR ALEX BROWN BE LIABLE 
+ * DISCLAIMED. IN NO EVENT SHALL CLEARPATH ROBOTICS, INC. OR ALEX BROWN BE LIABLE
  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * Please send comments, questions, or patches to Alex Brown  rbirac@cox.net
  *
  */
@@ -46,7 +46,11 @@
 #include "um7/Reset.h"
 #include <string>
 
-float covar[9];     // orientation covariance values
+double orientation_covar;     // orientation covariance values
+double angular_vel_covar;
+double linear_acc_covar;
+
+
 const char VERSION[10] = "0.0.2";   // um7_driver version
 
 // Don't try to be too clever. Arrival of this message triggers
@@ -216,25 +220,29 @@ void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& 
     imu_msg.orientation.w = r.quat.get_scaled(0);
 
     // Covariance of attitude.  set to constant default or parameter values
-    imu_msg.orientation_covariance[0] = covar[0];
-    imu_msg.orientation_covariance[1] = covar[1];
-    imu_msg.orientation_covariance[2] = covar[2];
-    imu_msg.orientation_covariance[3] = covar[3];
-    imu_msg.orientation_covariance[4] = covar[4];
-    imu_msg.orientation_covariance[5] = covar[5];
-    imu_msg.orientation_covariance[6] = covar[6];
-    imu_msg.orientation_covariance[7] = covar[7];
-    imu_msg.orientation_covariance[8] = covar[8];
+    imu_msg.orientation_covariance[0] = orientation_covar;
+    imu_msg.orientation_covariance[4] = orientation_covar;
+    imu_msg.orientation_covariance[8] = orientation_covar;
 
     // Angular velocity.  transform to ROS axes
     imu_msg.angular_velocity.x =  r.gyro.get_scaled(0);
     imu_msg.angular_velocity.y = -r.gyro.get_scaled(1);
     imu_msg.angular_velocity.z = -r.gyro.get_scaled(2);
 
+    // Covariance of angular velocity. set to constant default or parameter values
+    imu_msg.angular_velocity_covariance[0] = angular_vel_covar;
+    imu_msg.angular_velocity_covariance[4] = angular_vel_covar;
+    imu_msg.angular_velocity_covariance[8] = angular_vel_covar;
+
     // Linear accel.  transform to ROS axes
     imu_msg.linear_acceleration.x =  r.accel.get_scaled(0);
     imu_msg.linear_acceleration.y = -r.accel.get_scaled(1);
     imu_msg.linear_acceleration.z = -r.accel.get_scaled(2);
+
+    // Covariance of linear acceleration. set to constant default or parameter values.
+    imu_msg.linear_acceleration_covariance[0] = linear_acc_covar;
+    imu_msg.linear_acceleration_covariance[4] = linear_acc_covar;
+    imu_msg.linear_acceleration_covariance[8] = linear_acc_covar;
 
     imu_pub.publish(imu_msg);
   }
@@ -300,20 +308,11 @@ int main(int argc, char **argv)
   //   "covariance unknown" as advised in sensor_msgs/Imu.h.
   // This param allows the user to specify alternate covariance values if needed.
 
-  std::string covariance;
-  char cov[200];
-  char *ptr1;
+  double ori_covariance, ang_covariance, lin_covariance;
 
-  ros::param::param<std::string>("~covariance", covariance, "0 0 0 0 0 0 0 0 0");
-  snprintf(cov, sizeof(cov), "%s", covariance.c_str());
-
-  char* p = strtok_r(cov, " ", &ptr1);           // point to first value
-  for (int iter = 0; iter < 9; iter++)
-  {
-    if (p) covar[iter] = atof(p);                // covar[] is global var
-    else  covar[iter] = 0.0;
-    p = strtok_r(NULL, " ", &ptr1);              // point to next value (nil if none)
-  }
+  ros::param::param<double>("~orientation_covariance", ori_covariance, "0.01");
+  ros::param::param<double>("~angular_velocity_covariance", ang_covariance, "0.005");
+  ros::param::param<double>("~linear_acceleration_covariance", lin_covariance, "0.06");
 
   // Real Time Loop
   bool first_failure = true;
