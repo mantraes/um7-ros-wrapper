@@ -115,9 +115,15 @@ void sendCommand(um7::Comms* sensor, const um7::Accessor<RegT>& reg, std::string
 void configureSensor(um7::Comms* sensor)
 {
     um7::Registers r;
+
+    // set trim
     r.gyro_trim.set(0, gyro_x_trim);
     r.gyro_trim.set(1, gyro_y_trim);
     r.gyro_trim.set(2, gyro_z_trim);
+
+    ROS_INFO("gyro x trim value is %f", r.gyro_trim.get(0));
+    ROS_INFO("gyro y trim value is %f", r.gyro_trim.get(1));
+    ROS_INFO("gyro z trim value is %f", r.gyro_trim.get(2));
     
     uint32_t comm_reg = (BAUD_115200 << COM_BAUD_START);
     r.communication.set(0, comm_reg);
@@ -361,8 +367,6 @@ int main(int argc, char **argv)
         um7::Registers registers;
         ros::ServiceServer srv = n.advertiseService<um7::Reset::Request, um7::Reset::Response>(
             "reset", boost::bind(handleResetService, &sensor, _1, _2));
-
-        ROS_INFO("gyro x trim value is %f", registers.gyro_trim.get(0));
 
         while (ros::ok())
         {
