@@ -156,6 +156,7 @@ class Registers {
       accel_raw(this, DREG_ACCEL_RAW_XY, 3),
       mag_raw(this, DREG_MAG_RAW_XY, 3),
       gyro(this, DREG_GYRO_PROC_X, 3, 1.0 * TO_RADIANS),
+      gyro_trim(this, CREG_GYRO_TRIM_X, 3),
       accel(this, DREG_ACCEL_PROC_X, 3, 9.80665),
       mag(this, DREG_MAG_PROC_X, 3,1.0),
       euler(this, DREG_EULER_PHI_THETA, 3, 0.0109863 * TO_RADIANS),
@@ -171,8 +172,7 @@ class Registers {
       mag_bias(this, CREG_MAG_BIAS_X, 3),
       cmd_zero_gyros(this, CHR_ZERO_GYROS),
       cmd_reset_ekf(this, CHR_RESET_EKF),
-      cmd_set_mag_ref(this, CHR_SET_MAG_REFERENCE),
-      gyro_trim(this, CREG_GYRO_TRIM_X, 3)
+      cmd_set_mag_ref(this, CHR_SET_MAG_REFERENCE)
     {
       memset(raw_, 0, sizeof(raw_));
     }
@@ -186,7 +186,7 @@ class Registers {
     const Accessor<uint32_t> communication, misc_config, status, comrate2,
                             comrate4, comrate5, comrate6;
 
-    const Accessor<float>  mag_bias;
+    const Accessor<float>  mag_bias, gyro_trim;
 
     // Commands
     const Accessor<uint32_t> cmd_zero_gyros, cmd_reset_ekf, cmd_set_mag_ref;
