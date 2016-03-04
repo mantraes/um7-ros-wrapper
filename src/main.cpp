@@ -206,6 +206,7 @@ void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& 
   static ros::Publisher imu_pub = n->advertise<sensor_msgs::Imu>("imu/data", 1, false);
   static ros::Publisher mag_pub = n->advertise<geometry_msgs::Vector3Stamped>("imu/mag", 1, false);
   static ros::Publisher rpy_pub = n->advertise<geometry_msgs::Vector3Stamped>("imu/rpy", 1, false);
+  static ros::Publisher pose_pub = n->advertise<geometry_msgs::PoseStamped>("imu/pose", 1, false);
   static ros::Publisher temp_pub = n->advertise<std_msgs::Float32>("imu/temperature", 1, false);
 
   if (imu_pub.getNumSubscribers() > 0)
@@ -275,6 +276,18 @@ void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& 
     std_msgs::Float32 temp_msg;
     temp_msg.data = r.temperature.get_scaled(0);
     temp_pub.publish(temp_msg);
+  }
+
+  // Pose. IMU outputs [w,x,y,z], convert to [x,y,z,w] & transform to ROS axes
+  if (pose_pub.getNumSubscribers() > 0)
+  {
+    geometry_msgs::PoseStamped pose_msg;
+    pose_msg.header = header;
+    pose_msg.pose.orientation.x = r.quat.get_scaled(1);
+    pose_msg.pose.orientation.y = -r.quat.get_scaled(2);
+    pose_msg.pose.orientation.z = -r.quat.get_scaled(3);
+    pose_msg.pose.orientation.w = r.quat.get_scaled(0);
+    pose_pub.publish(pose_msg);
   }
 }
 
