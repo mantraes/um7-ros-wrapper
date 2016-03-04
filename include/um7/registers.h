@@ -8,7 +8,7 @@
  *  \copyright  Copyright (c) 2013, Clearpath Robotics, Inc.
  *  \author     Alex Brown <rbirac@cox.net>                 adapted code for UM7
  *  \copyright  Copyright (c) 2015, Alex Brown
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *     * Redistributions of source code must retain the above copyright
@@ -19,7 +19,7 @@
  *     * Neither the name of Clearpath Robotics, Inc. nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,7 +30,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * Please send comments, questions, or patches to Alex Brown  rbirac@cox.net
  *
  */
@@ -82,9 +82,9 @@ class Registers;
 
 /**
  * This class provides an accessor of fields contained in one or more
- * consecutive UM7 registers. Each register is nominally a uint32_t, 
- * but XYZ vectors are sometimes stored as a pair of int16_t values in 
- * one register and one in the following register. Other values are 
+ * consecutive UM7 registers. Each register is nominally a uint32_t,
+ * but XYZ vectors are sometimes stored as a pair of int16_t values in
+ * one register and one in the following register. Other values are
  * stored as int32_t representation or float32s.
  *
  * This class takes care of the necessary transformations to simplify
@@ -100,17 +100,17 @@ class Accessor_ {
 
     void* raw() const;
 
-    /** 
+    /**
      * Number/address of the register in the array of uint32s which is
-     * shared with the UM7 firmware. */ 
+     * shared with the UM7 firmware. */
     const uint8_t index;
 
-    /** 
+    /**
      * Width of the sub-register field, in bytes, either 2 or 4. */
     const uint8_t width;
 
-    /** 
-     * Length of how many sub-register fields comprise this accessor. Not 
+    /**
+     * Length of how many sub-register fields comprise this accessor. Not
      * required to stay within the bounds of a single register. */
     const uint16_t length;
 
@@ -156,7 +156,7 @@ class Registers {
       accel_raw(this, DREG_ACCEL_RAW_XY, 3),
       mag_raw(this, DREG_MAG_RAW_XY, 3),
       gyro(this, DREG_GYRO_PROC_X, 3, 1.0 * TO_RADIANS),
-      accel(this, DREG_ACCEL_PROC_X, 3, 9.80665),              
+      accel(this, DREG_ACCEL_PROC_X, 3, 9.80665),
       mag(this, DREG_MAG_PROC_X, 3,1.0),
       euler(this, DREG_EULER_PHI_THETA, 3, 0.0109863 * TO_RADIANS),
       quat(this, DREG_QUAT_AB, 4, 0.0000335693),
@@ -164,7 +164,7 @@ class Registers {
       communication(this, CREG_COM_SETTINGS, 1),
       comrate2(this, CREG_COM_RATES2, 1),
       comrate4(this, CREG_COM_RATES4, 1),
-      comrate5(this, CREG_COM_RATES5, 1), 
+      comrate5(this, CREG_COM_RATES5, 1),
       comrate6(this, CREG_COM_RATES6, 1),
       misc_config(this, CREG_MISC_SETTINGS, 1),
       status(this, CREG_COM_RATES6, 1),
@@ -172,20 +172,21 @@ class Registers {
       cmd_zero_gyros(this, CHR_ZERO_GYROS),
       cmd_reset_ekf(this, CHR_RESET_EKF),
       cmd_set_mag_ref(this, CHR_SET_MAG_REFERENCE)
+      gyro_trim(this, CREG_GYRO_TRIM_X, 3);
     {
       memset(raw_, 0, sizeof(raw_));
     }
 
     // Data
     const Accessor<int16_t> gyro_raw, accel_raw, euler, mag_raw, quat;
-                             
+
     const Accessor<float> gyro, accel, mag, temperature;
 
     // Configs
     const Accessor<uint32_t> communication, misc_config, status, comrate2,
                             comrate4, comrate5, comrate6;
 
-    const Accessor<float>  mag_bias;  
+    const Accessor<float>  mag_bias;
 
     // Commands
     const Accessor<uint32_t> cmd_zero_gyros, cmd_reset_ekf, cmd_set_mag_ref;

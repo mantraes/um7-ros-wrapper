@@ -51,6 +51,10 @@ float orientation_covar;     // covariance values
 float angular_vel_covar;
 float linear_acc_covar;
 
+float gyro_x_trim;
+float gyro_y_trim;
+float gyro_z_trim;
+
 
 const char VERSION[10] = "0.0.2";   // um7_driver version
 
@@ -322,10 +326,14 @@ int main(int argc, char **argv)
   //   by default, this driver provides a covariance array of all zeros indicating
   //   "covariance unknown" as advised in sensor_msgs/Imu.h.
   // This param allows the user to specify alternate covariance values if needed.
-
   ros::param::param<float>("~orientation_covariance", orientation_covar, 0.01);
   ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.000025);
   ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.0036);
+
+  // set gyro trim rates
+  ros::param::param<float>("~gyro_x_trim", gyro_x_trim, 0.06);
+  ros::param::param<float>("~gyro_y_trim", gyro_y_trim, -0.1);
+  ros::param::param<float>("~gyro_z_trim", gyro_z_trim, -1.8);
 
   // Real Time Loop
   bool first_failure = true;
@@ -350,6 +358,12 @@ int main(int argc, char **argv)
         um7::Registers registers;
         ros::ServiceServer srv = n.advertiseService<um7::Reset::Request, um7::Reset::Response>(
             "reset", boost::bind(handleResetService, &sensor, _1, _2));
+
+        registers.gyro_trim.set(0, gyro_x_trim);
+        registers.gyro_trim.set(1, gyro_y_trim);
+        registers.gyro_trim.set(2, gyro_z_trim);
+
+        ROS_INFO("gyro x trim value is %f", registers.gyro_trim.get(0));
 
         while (ros::ok())
         {
