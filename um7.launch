@@ -9,6 +9,10 @@
     <param name="quat_mode"       value="false" />
     <param name="zero_gyros"      value="true" />
 
+    <param name="orientation_covariance"      	      value="0.01" />
+    <param name="angular_velocity_covariance"         value="0.005" />
+    <param name="linear_acceleration_covariance"      value="0.06" />
+
   </node>
 
 </launch>
