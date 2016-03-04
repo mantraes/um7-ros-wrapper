@@ -311,8 +311,8 @@ int main(int argc, char **argv)
   double ori_covariance, ang_covariance, lin_covariance;
 
   ros::param::param<double>("~orientation_covariance", ori_covariance, 0.01);
-  ros::param::param<double>("~angular_velocity_covariance", ang_covariance, 0.005);
-  ros::param::param<double>("~linear_acceleration_covariance", lin_covariance, 0.06);
+  ros::param::param<double>("~angular_velocity_covariance", ang_covariance, 0.000025);
+  ros::param::param<double>("~linear_acceleration_covariance", lin_covariance, 0.0036);
 
   // Real Time Loop
   bool first_failure = true;
