@@ -333,6 +333,10 @@ int main(int argc, char **argv)
   if (!ang_covariance) ang_covariance = 0.000025;
   if (!lin_covariance) lin_covariance = 0.0036;
 
+  ROS_DEBUG("orientation covariance is %f", ori_covariance);
+  ROS_DEBUG("angular velocity covariance is %f", ang_covariance);
+  ROS_DEBUG("linear acceleration covariance is %f", lin_covariance);
+
   // Real Time Loop
   bool first_failure = true;
   while (ros::ok())
