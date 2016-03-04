@@ -47,9 +47,9 @@
 #include "um7/Reset.h"
 #include <string>
 
-double orientation_covar;     // orientation covariance values
-double angular_vel_covar;
-double linear_acc_covar;
+float orientation_covar;     // covariance values
+float angular_vel_covar;
+float linear_acc_covar;
 
 
 const char VERSION[10] = "0.0.2";   // um7_driver version
@@ -323,19 +323,9 @@ int main(int argc, char **argv)
   //   "covariance unknown" as advised in sensor_msgs/Imu.h.
   // This param allows the user to specify alternate covariance values if needed.
 
-  double ori_covariance, ang_covariance, lin_covariance;
-
-  ros::param::param<double>("~orientation_covariance", ori_covariance, 0.01);
-  ros::param::param<double>("~angular_velocity_covariance", ang_covariance, 0.000025);
-  ros::param::param<double>("~linear_acceleration_covariance", lin_covariance, 0.0036);
-
-  if (!ori_covariance) ori_covariance = 0.01;
-  if (!ang_covariance) ang_covariance = 0.000025;
-  if (!lin_covariance) lin_covariance = 0.0036;
-
-  ROS_DEBUG("orientation covariance is %f", ori_covariance);
-  ROS_DEBUG("angular velocity covariance is %f", ang_covariance);
-  ROS_DEBUG("linear acceleration covariance is %f", lin_covariance);
+  ros::param::param<float>("~orientation_covariance", orientation_covar, 0.01);
+  ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.000025);
+  ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.0036);
 
   // Real Time Loop
   bool first_failure = true;
