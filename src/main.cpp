@@ -38,6 +38,7 @@
 #include "geometry_msgs/Vector3Stamped.h"
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
+#include "geometry_msgs/PoseStamped.h"
 #include "serial/serial.h"            // must install serial library from apt-get
 #include "std_msgs/Float32.h"
 #include "std_msgs/Header.h"
