@@ -5,7 +5,7 @@
     <param name="port"            value="/dev/ttyUSB0" />
     <param name="baud"            value="115200" />
     <param name="frame_id"        value="imu_link" />
-    <param name="mag_updates"     value="true" />
+    <param name="mag_updates"     value="false" />
     <param name="quat_mode"       value="true" />
     <param name="zero_gyros"      value="true" />
 
@@ -13,9 +13,12 @@
     <param name="angular_velocity_covariance"         value="0.01" />
     <param name="linear_acceleration_covariance"      value="0.01" />
 
-    <param name="gyro_x_trim"      value="0.05329273"/>
-    <param name="gyro_y_trim"      value="-0.07463416"/>
-    <param name="gyro_z_trim"      value="-1.563177"/>
-  </node>
+    <param name="gyro_x_trim"      value="0.0"/>
+    <param name="gyro_y_trim"      value="0.0"/>
+    <param name="gyro_z_trim"      value="0.0"/>
 
+
+    <!-- instead of gyro trim, we want to be able to write to the magnetic
+         calibration matrix, and the corresponding x,y,z biases. -->
+  </node>
 </launch>

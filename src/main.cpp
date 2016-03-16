@@ -34,18 +34,17 @@
  * Please send comments, questions, or patches to Alex Brown  rbirac@cox.net
  *
  */
-
-#include "geometry_msgs/Vector3Stamped.h"
-#include "ros/ros.h"
-#include "sensor_msgs/Imu.h"
-#include "geometry_msgs/PoseStamped.h"
-#include "serial/serial.h"            // must install serial library from apt-get
-#include "std_msgs/Float32.h"
-#include "std_msgs/Header.h"
-#include "um7/comms.h"
-#include "um7/registers.h"
-#include "um7/Reset.h"
 #include <string>
+#include <geometry_msgs/Vector3Stamped.h>
+#include <ros/ros.h>
+#include <sensor_msgs/Imu.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <serial/serial.h>            // must install serial library from apt-get
+#include <std_msgs/Float32.h>
+#include <std_msgs/Header.h>
+#include <um7/comms.h>
+#include <um7/registers.h>
+#include <um7/Reset.h>
 
 float orientation_covar;     // covariance values
 float angular_vel_covar;
@@ -215,7 +214,7 @@ bool handleResetService(um7::Comms* sensor,
  * Uses the register accessors to grab data from the IMU, and populate
  * the ROS messages which are output.
  */
-void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& header)
+void publishMsgs(const um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& header)
 {
   static ros::Publisher imu_pub = n->advertise<sensor_msgs::Imu>("imu/data", 1, false);
   static ros::Publisher mag_pub = n->advertise<geometry_msgs::Vector3Stamped>("imu/mag", 1, false);
@@ -303,7 +302,6 @@ void publishMsgs(um7::Registers& r, ros::NodeHandle* n, const std_msgs::Header& 
     pose_msg.pose.orientation.w = r.quat.get_scaled(0);
     pose_pub.publish(pose_msg);
   }
-
 }
 
 
@@ -335,14 +333,14 @@ int main(int argc, char **argv)
   //   by default, this driver provides a covariance array of all zeros indicating
   //   "covariance unknown" as advised in sensor_msgs/Imu.h.
   // This param allows the user to specify alternate covariance values if needed.
-  ros::param::param<float>("~orientation_covariance", orientation_covar, 0.01);
-  ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.01);
-  ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.01);
+  ros::param::param<float>("~orientation_covariance", orientation_covar, 0.0);
+  ros::param::param<float>("~angular_velocity_covariance", angular_vel_covar, 0.0);
+  ros::param::param<float>("~linear_acceleration_covariance", linear_acc_covar, 0.0);
 
   // set gyro trim rates
-  ros::param::param<float>("~gyro_x_trim", gyro_x_trim, 0.05329273);
-  ros::param::param<float>("~gyro_y_trim", gyro_y_trim, -0.07463416);
-  ros::param::param<float>("~gyro_z_trim", gyro_z_trim, -1.563177);
+  ros::param::param<float>("~gyro_x_trim", gyro_x_trim, 0.0);
+  ros::param::param<float>("~gyro_y_trim", gyro_y_trim, 0.0);
+  ros::param::param<float>("~gyro_z_trim", gyro_z_trim, 0.0);
 
   // Real Time Loop
   bool first_failure = true;
@@ -366,7 +364,7 @@ int main(int argc, char **argv)
         configureSensor(&sensor);
         um7::Registers registers;
         ros::ServiceServer srv = n.advertiseService<um7::Reset::Request, um7::Reset::Response>(
-            "reset", boost::bind(handleResetService, &sensor, _1, _2));
+            "reset_um7", boost::bind(handleResetService, &sensor, _1, _2));
 
         while (ros::ok())
         {

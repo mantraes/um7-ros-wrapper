@@ -1,11 +1,11 @@
- /**  
+ /**
  *  \file
  *  \brief   Copied directly from the UM7 version of the UM6_config.h file, available online here:
  *           http://sourceforge.net/p/um6firmware/code/34/tree/trunk/UM6%20Firmware/UM6_config.h#l14
  *           Note: while while the source of this code is named "UM6_config.h", it is not the same
  *           as the file used for the UM6 and is part of the UM7 source code.
  *  \author  Alex Brown  rbirac@cox.net
- *  \maintainer  Alex Brown  rbirac@cox.net    
+ *  \maintainer  Alex Brown  rbirac@cox.net
  */
 
 
@@ -13,7 +13,7 @@
 #define	UM6_FIRMWARE_REVISION		(('U' << 24) | ('7' << 16) | ('1' << 8) | 'C')
 
 // CONFIG_ARRAY_SIZE and DATA_ARRAY_SIZE specify the number of 32 bit configuration and data registers used by the firmware
-// (Note: The term "register" is used loosely here.  These "registers" are not actually registers in the same sense of a 
+// (Note: The term "register" is used loosely here.  These "registers" are not actually registers in the same sense of a
 // microcontroller register.  They are simply index locations into arrays stored in global memory.  Data and configuration
 // parameters are stored in arrays because it allows a common communication protocol to be used to access all data and
 // configuration.  The software communicating with the sensor needs only specify the register address, and the communication
@@ -41,10 +41,10 @@
 #define CREG_COM_RATES5				5
 #define CREG_COM_RATES6				6
 #define CREG_COM_RATES7				7
-#define CREG_MISC_SETTINGS			8
+#define CREG_MISC_SETTINGS		8
 #define CREG_HOME_NORTH				9
 #define CREG_HOME_EAST				10
-#define CREG_HOME_UP				11
+#define CREG_HOME_UP				  11
 #define CREG_GYRO_TRIM_X			12		// Floating point trim (actual angular rate)
 #define CREG_GYRO_TRIM_Y			13
 #define CREG_GYRO_TRIM_Z			14
@@ -72,7 +72,7 @@
 #define COM_GPS_SAT_DATA_ENABLED	(1 << 4)
 
 // Definitions for controlling the baud rate of the USART
-#define BAUD_9600					0
+#define BAUD_9600					  0
 #define BAUD_14400					1
 #define BAUD_19200					2
 #define BAUD_38400					3
@@ -202,7 +202,7 @@
 #define HEALTH_SATS_USED_START		26			// Lowest-order bit starts at 26
 #define HEALTH_HDOP_MASK			0x3FF		// Uses 10 bits
 #define HEALTH_HDOP_START			16			// Lowest-order bit starts at 16
-#define HEALTH_SATS_IN_VIEW_MASK	0x3F		
+#define HEALTH_SATS_IN_VIEW_MASK	0x3F
 #define HEALTH_SATS_IN_VIEW_START	10
 #define HEALTH_COM_OVERFLOW			(1 << 8)	// Set when the sensor was unable to transmit all the requested data
 #define HEALTH_MAG_NORM				(1 << 5)
@@ -272,7 +272,7 @@
 
 #define	GYRO_ZERO_SAMPLE_SIZE	500
 
-typedef struct __CHR_config 
+typedef struct __CHR_config
 {
     union
     {
@@ -289,5 +289,3 @@ typedef struct __CHR_data
         float    f[DATA_ARRAY_SIZE];
     };
 } CHR_data;
-
-
